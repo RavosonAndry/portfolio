@@ -1,0 +1,40 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&display=swap");
+
+@import "tailwindcss";
+
+@theme {
+  /* Tes couleurs personnalisées si besoin */
+  /* 2. Définition de la variable de police */
+  --font-montserrat: "Montserrat", ui-sans-serif, system-ui, sans-serif;
+
+  /* 3. Optionnel : Remplacer la police sans-serif par défaut du projet */
+  --font-sans: var(--font-montserrat);
+
+  /* Tu peux aussi ajouter tes couleurs personnalisées ici pour ton thème industriel */
+  --color-industrial-teal: #00a39b;
+  --color-industrial-orange: #e67e22;
+}
+/* Cache la scrollbar proprement */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.carousel-permanent-mask {
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 5%,
+    black 95%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 5%,
+    black 95%,
+    transparent 100%
+  );
+}
