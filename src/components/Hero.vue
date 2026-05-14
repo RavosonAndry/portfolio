@@ -117,7 +117,7 @@ const roles = ref([
     bgColor: 'bg-[#00a39b]',
     imgOffset: '-top-[90%]',
     // AJUSTEMENT : On remonte plus l'image pour mobile (évite qu'elle tombe sur le texte)
-    imgOffsetMobile: '-top-[200%]'
+    imgOffsetMobile: '-top-[230%]'
   },
   {
     id: 'indus',
@@ -128,7 +128,7 @@ const roles = ref([
     bgColor: 'bg-[#e67e22]',
     imgOffset: '-top-[80%]',
     // AJUSTEMENT : On remonte plus l'image pour mobile
-    imgOffsetMobile: '-top-[200%]'
+    imgOffsetMobile: '-top-[230%]'
   }
 ])
 
