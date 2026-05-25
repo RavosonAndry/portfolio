@@ -16,8 +16,12 @@ export const useProjectStore = defineStore("projectStore", () => {
     });
   };
 
-  const addProject = async (project: Project) => {
-    await push(dbRef(db, "projects"), project);
+  const addProject = async (project: any) => {
+    // On ajoute la date de création ici
+    await push(dbRef(db, "projects"), {
+      ...project,
+      createdAt: Date.now(),
+    });
   };
 
   // NOUVELLE ACTION

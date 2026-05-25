@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { ref, onMounted, nextTick, watch, onUnmounted } from 'vue';
+import { ref, onMounted, nextTick, watch, onUnmounted, computed} from 'vue';
 import { useProjectStore } from '../stores/projectStore';
 import { useAuthStore } from '../stores/authStore.ts'
 import Notification from './Notification.vue'
+
+const sortOrder = ref<'asc' | 'desc'>('desc');
 
 const notifRef = ref();
 const projectIdToDelete = ref<string | null>(null);
@@ -26,6 +28,25 @@ const canScrollLeft = ref(false);
 const canScrollRight = ref(false);
 let observer: IntersectionObserver | null = null;
 
+// Logique de tri
+const sortedProjects = computed(() => {
+  return [...projectStore.projects].sort((a, b) => {
+    const dateA = a.createdAt || 0;
+    const dateB = b.createdAt || 0;
+    return sortOrder.value === 'desc' ? dateB - dateA : dateA - dateB;
+  });
+});
+
+const toggleSort = () => {
+  sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc';
+};
+
+// MODIFICATION DU WATCHER : On observe sortedProjects au lieu de projectStore.projects
+watch(sortedProjects, async () => {
+  await nextTick();
+  initFocusEffect();
+  handleScroll();
+}, { deep: true });
 const handleScroll = () => {
   if (scrollContainer.value) {
     const { scrollLeft, scrollWidth, clientWidth } = scrollContainer.value;
@@ -151,7 +172,14 @@ const onConfirmDelete = async (confirmed: boolean) => {
         <h2 class="font-montserrat text-xl md:text-2xl font-black text-gray-800 uppercase tracking-tighter">Mes Projets</h2>
         <div class="h-1 w-12 bg-orange-500 mt-1"></div>
       </div>
-
+        <!-- BOUTON TRI (Admin uniquement) -->
+        <button v-if="authStore.isAdmin" @click="toggleSort" 
+                class="flex items-center gap-1 px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors group">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-600 group-hover:text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+          </svg>
+          <span class="text-[10px] font-bold uppercase text-gray-500">{{ sortOrder === 'desc' ? 'Récents' : 'Anciens' }}</span>
+        </button>
       <!-- Flèches Mobile -->
       <div class="flex gap-2 lg:hidden mb-1 h-10">
         <Transition name="fade">
@@ -182,7 +210,7 @@ const onConfirmDelete = async (confirmed: boolean) => {
         <!-- Spacer initial -->
         <div class="min-w-[10%] md:min-w-[25%] h-10 shrink-0"></div>
 
-        <div v-for="project in projectStore.projects" :key="project.id"
+        <div v-for="project in sortedProjects" :key="project.id"
           class="project-card min-w-[240px] md:min-w-[300px] h-[320px] md:h-[360px] snap-center transition-all duration-500 ease-out relative">
 
           <!-- BOUTON SUPPRIMER (Admin) -->
