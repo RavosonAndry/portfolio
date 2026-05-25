@@ -23,6 +23,15 @@ const IMG_INDUS = "https://images.unsplash.com/photo-1518770660439-4636190af475?
 
 const form = ref({ name: '', description: '', link: '', category: 'dev' as 'dev' | 'indus', imageUrl: '' });
 
+const formatLink = (url: string) => {
+  if (!url) return '#';
+  // Vérifie si l'URL commence par http:// ou https://
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+  // Sinon, on ajoute https:// par défaut
+  return `https://${url}`;
+};
 // --- LOGIQUE SCROLL & ANIMATION ---
 const canScrollLeft = ref(false);
 const canScrollRight = ref(false);
@@ -221,7 +230,7 @@ const onConfirmDelete = async (confirmed: boolean) => {
             </svg>
           </button>
 
-          <a :href="project.link" target="_blank"
+          <a :href="formatLink(project.link)" target="_blank"
             class="block w-full h-full bg-white rounded-[1.5rem] md:rounded-[3rem] shadow-2xl overflow-hidden relative group border border-white/50">
             
             <div class="h-[45%] md:h-2/3 w-full relative overflow-hidden">
