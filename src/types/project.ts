@@ -5,4 +5,5 @@ export interface Project {
   link: string;
   category: "dev" | "indus";
   imageUrl: string; // Pour l'aperçu visuel
+  createdAt?: number;
 }
